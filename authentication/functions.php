@@ -31,3 +31,11 @@ function getUser($id) {
 
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
+
+function saveUser($email, $username, $password) {
+    $connexion = connectDb();
+    $sql = 'INSERT INTO users(username,email,password) VALUES("'.$email.'","'.$username.'","'.$password.'")';
+    $stmt = $connexion->prepare($sql);
+
+    return $stmt->execute();
+}
