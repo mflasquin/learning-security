@@ -28,3 +28,6 @@ if(isset($_GET['id'])) {
 <?php else: ?>
     L'utilisateur recherché n'existe pas
 <?php endif; ?>
+<br/>
+<br/>
+<a href="index.php">Accueil</a>

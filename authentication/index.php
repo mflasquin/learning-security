@@ -1,7 +1,7 @@
 <?php
 require_once('functions.php');
 session_start();
-$user = $_SESSION['user'] ?: null;
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 if (isset($_GET['email']) && isset($_GET['password'])) {
     $users = logUser($_GET['email'], $_GET['password']);
     if(!empty($users)) {
@@ -47,7 +47,8 @@ if (isset($_GET['email']) && isset($_GET['password'])) {
     <a href="register.php">Je m'inscrit</a>
     <?php else: ?>
         <h1>Bienvenue <?= $user->email ?></h1>
-    <a href="informations.php?id=<?= $user->id ?>">Mes informations</a>
+    <a href="informations.php?id=<?= $user->id ?>">Mes informations</a><br/>
+    <a href="logout.php">Logout</a>
     <?php endif ?>
 </div>
 </body>
