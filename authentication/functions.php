@@ -16,11 +16,21 @@ function connectDb()
 function logUser($email, $password)
 {
     $connexion = connectDb();
-    $sql = 'SELECT * FROM users WHERE email = "' . $email . '" AND password = "' .$password . '"';
-    $stmt = $connexion->prepare($sql);
-    $stmt->execute();
+    $sql = 'SELECT * FROM users WHERE email = "' . $email . '"';
+    $sqlmdp = 'SELECT password FROM users WHERE email = "' . $email . '"';
+	$stmtmdp = $connexion->prepare($sqlmdp);
+	$stmtmdp->execute();
+	$result = $stmtmdp->fetch(PDO::FETCH_ASSOC);
+	$passwordVerify = password_verify($password, $result["password"]);
+	if ($passwordVerify) {
+		$stmt = $connexion->prepare($sql);
+		$stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_OBJ);
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+	else {
+		return null;
+	}
 }
 
 function getUser($id) {
@@ -34,7 +44,10 @@ function getUser($id) {
 
 function saveUser($email, $username, $password) {
     $connexion = connectDb();
-    $sql = 'INSERT INTO users(username,email,password) VALUES("'.$email.'","'.$username.'","'.$password.'")';
+	$hashPass = password_hash($password, PASSWORD_DEFAULT);
+	$username = htmlentities($username, ENT_QUOTES, 'UTF-8');
+	$email = htmlentities($email, ENT_QUOTES, 'UTF-8');
+    $sql = 'INSERT INTO users(username,email,password) VALUES("'.$email.'","'.$username.'","'.$hashPass.'")';
     $stmt = $connexion->prepare($sql);
 
     return $stmt->execute();
